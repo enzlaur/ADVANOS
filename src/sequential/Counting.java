@@ -6,6 +6,11 @@ package sequential;
 public class Counting
 {
 
+	/**
+	 * Main sorting algorithm goes here.
+	 * @param numList
+	 * @return
+	 */
 	int[] sort(int[] numList)
 	{
 		println("Running counting sort");
@@ -37,6 +42,15 @@ public class Counting
 		return countTable;
 	}
 
+	/**
+	 * Finds the smallest value and the largest value in the given list.
+	 * @param numList
+	 * List provided by the user.
+	 * @return
+	 * An array wherein:
+	 * Index 0 = Smallest value
+	 * Index 1 = Largest value
+	 */
 	int[] findMinAndMax(int[] numList)
 	{
 		int currMin = -99;
