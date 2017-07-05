@@ -5,35 +5,135 @@ package sequential;
  */
 public class Counting
 {
+	int[] _numList;
+	int _max;
+	boolean _printContents = true;
+
+	public Counting()
+	{}
+
+	public Counting(boolean _printContents)
+	{
+		this._printContents = _printContents;
+	}
 
 	/**
 	 * Main sorting algorithm goes here.
 	 * @param numList
 	 * @return
 	 */
-	int[] sort(int[] numList)
+	public int[] sort(int[] numList)
 	{
 		println("Running counting sort");
-		// Read the
-		int[] temp = findMinAndMax(numList);
-		int min = temp[0]; int max = temp[1]; int offset = max - min;
-		int[] countTable = new int[offset];
-		// initialize count table content to contain 0s at the start
+		/* Fnd the min and max numbers that will be used to determine the range
+		 * of the count table */
+		int[] temp 	= findMinAndMax(numList);
+		int min 	= temp[0];
+		int max 	= temp[1];
+		int offset 	= max - min; // used in initial counting
+		/* initialize countTable to be used as the list for telling
+		you how many times the number x appeared in the original list (numList) */
+		int[] countTable = new int[max + 1];
+		/* initialize count table content to contain 0s at the start */
 		countTable = initializeArraytable(countTable);
-		// perform counting
-		for( int i = 0; i < offset; i++ )
+		/* update global variables to be used for printing purposes only */
+		_numList 	= numList;
+		_max 		= max;
+		// final sorted list variable
+		int[] sortedList = new int[numList.length];
+		/* perform initial counting (the actual frequency count of each element inside the original list)*/
+		initialCountStep(countTable, numList, offset);
+		/* performs table adjustments */
+		incrementTableStep(countTable);
+		shiftCountToTheRightStep(countTable);
+		/* perform actual sorting */
+		for(int i = 0; i < numList.length; i++)
 		{
-			println(numList[i]);
-			++countTable[numList[i]];
+//			sortedList[countTable[numList[i]]] = countTable[numList[i]];
+			sortedList[countTable[numList[i]]] = numList[i];
+			countTable[numList[i]] = countTable[numList[i]] + 1;
 		}
-		for( int num : countTable )
-		{
-			print(num + " ");
-		}
-		return null;
+		printFinalTable( sortedList );
+		return sortedList;
 	}
 
-	int[] initializeArraytable(int[] countTable)
+	public int[] initialCountStep(int[] countTable, int[] numList, int offset)
+	{
+		for( int i = 0; i < offset; i++ )
+		{
+			countTable[numList[i]]++;
+		}
+		printContents(countTable, _numList, _max);
+		return countTable;
+	}
+
+	public int[] incrementTableStep(int[] countTable)
+	{
+		/* add numbers in the table to the right accumulatively */
+		for(int i = 0; i < countTable.length; i++)
+		{
+			if(i > 0)
+			{
+				countTable[i] = countTable[i-1] + countTable[i];
+			}
+		}
+		printContents(countTable, _numList, _max);
+		return countTable;
+	}
+
+	public int[] shiftCountToTheRightStep(int[] countTable)
+	{
+		for( int i = countTable.length - 1; i >=0; i-- )
+		{
+			if(i > 0)
+			{
+				countTable[i] = countTable[i-1];
+			} else
+			{
+				countTable[0] = 0;
+			}
+		}
+		printContents(countTable, _numList, _max);
+		return countTable;
+	}
+
+	public void printContents(int[] countTable, int[] numList, int max)
+	{
+		if( _printContents = true)
+		{
+			/**/
+			println("Current Count Table Contents");
+			/* table header */
+			for(int i = 0; i < max+1; i++)
+			{
+				print(i + " ");
+			}
+			println("");
+			for(int i = 0; i < max+1; i++ )
+			{
+				print("--");
+			}
+			println("");
+			for( int num : countTable )
+			{
+				print(num + " ");
+			}
+			println("");
+		}
+
+	}
+
+	public void printFinalTable(int[] sortedList)
+	{
+		println("Final Table (sorted): ");
+		for(int n : sortedList)
+		{
+			print(n + " ");
+		}
+	}
+
+
+	public int[] initializeArraytable(int[] countTable)
 	{
 		for( int i = 0; i < countTable.length; i++ )
 		{
@@ -98,9 +198,14 @@ public class Counting
 
 		public static void main(String[] args)
 		{
-			Counting ct = new Counting();
+			Counting ct = new Counting(true);
+			println("Original List: ");
+			for(int n : numList)
+			{
+				print(n + " ");
+			}
 			ct.sort(numList);
-			System.out.println("Hello");
+
 		}
 	}
 }
