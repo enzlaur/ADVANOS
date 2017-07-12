@@ -1,5 +1,9 @@
 package sequential;
 
+import Util.IOMaster;
+import Util.Numlist;
+
+
 /**
  * Created by laurenz on 03/07/2017.
  */
@@ -41,25 +45,28 @@ public class Counting
 		_max 		= max;
 		// final sorted list variable
 		int[] sortedList = new int[numList.length];
+
 		/* perform initial counting (the actual frequency count of each element inside the original list)*/
-		initialCountStep(countTable, numList, offset);
-		/* performs table adjustments */
-		incrementTableStep(countTable);
-		shiftCountToTheRightStep(countTable);
-		/* perform actual sorting */
-		for(int i = 0; i < numList.length; i++)
-		{
-//			sortedList[countTable[numList[i]]] = countTable[numList[i]];
-			sortedList[countTable[numList[i]]] = numList[i];
-			countTable[numList[i]] = countTable[numList[i]] + 1;
-		}
-		printFinalTable( sortedList );
+		initialCountStep(countTable, numList);
+//		/* performs table adjustments */
+//		incrementTableStep(countTable);
+//		/* shifting step */
+//		shiftCountToTheRightStep(countTable);
+//
+//		/* perform actual placing */
+//		for(int i = 0; i < numList.length; i++)
+//		{
+////			sortedList[countTable[numList[i]]] = countTable[numList[i]];
+//			sortedList[countTable[numList[i]]] = numList[i];
+//			countTable[numList[i]] = countTable[numList[i]] + 1;
+//		}
+//		printFinalTable( sortedList );
 		return sortedList;
 	}
 
-	public int[] initialCountStep(int[] countTable, int[] numList, int offset)
+	public int[] initialCountStep(int[] countTable, int[] numList)
 	{
-		for( int i = 0; i < offset; i++ )
+		for( int i = 0; i < numList.length; i++ )
 		{
 			countTable[numList[i]]++;
 		}
@@ -194,18 +201,26 @@ public class Counting
 	 */
 	static class Test
 	{
-		static int numList[] = { 4,2,3,7,5 };
 
-		public static void main(String[] args)
+		static int numList[] = {1,1,1,1,1,1,2,3,3,4,6,7,3,2};
+
+		public static void main(String[] args) throws Exception
 		{
+			IOMaster ioMaster = new IOMaster();
 			Counting ct = new Counting(true);
-			println("Original List: ");
-			for(int n : numList)
-			{
-				print(n + " ");
-			}
-			ct.sort(numList);
 
+			numList = ioMaster.readFileToNumList();
+
+//			println("Original List: ");
+//			for(int n : numList)
+//			{
+//				print(n + " ");
+//			}
+			long startTime = System.currentTimeMillis();
+			ct.sort(numList);
+			long endTime   = System.currentTimeMillis();
+			long totalTime = endTime - startTime;
+			System.out.println("Time: " + totalTime);
 		}
 	}
 }
