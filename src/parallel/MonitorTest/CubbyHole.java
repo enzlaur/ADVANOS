@@ -3,7 +3,7 @@ package parallel.MonitorTest;
 /**
  * Created by laurenz on 12/07/2017.
  */
-public class CubbyHole
+class CubbyHole
 {
 	private int contents;
 	private boolean available = false;
